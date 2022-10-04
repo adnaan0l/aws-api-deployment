@@ -2,9 +2,10 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone repo') {
+        stage('test') {
             steps {
-                sh 'git clone git@github.com:adnaan0l/aws-api-deployment.git .'
+                sh 'ls'
+                sh 'pwd'
             }
         }
     }
