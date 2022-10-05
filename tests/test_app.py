@@ -20,5 +20,5 @@ def test_base2():
     event = {}
     context = {}
     result = app.handler(event, context)
-    base_result = {"statusCode": 200, "body": json.dumps("Hello from Lambda!")}
+    base_result = "Hello from Lambda"
     assert result == base_result
