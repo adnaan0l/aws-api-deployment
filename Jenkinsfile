@@ -25,5 +25,13 @@ pipeline {
                 sh "cat pytest_results.txt"
             }
         }
+
+        stage('Deploy Serverless') {
+            steps {
+                sh "sam validate"
+                sh "sam build"
+                sh "sam deploy --stack-name=sam-helloworld --image-repository=744763296558.dkr.ecr.ap-south-1.amazonaws.com/test/sam-helloworld --capabilities=CAPABILITY_IAM --on-failure=DELETE"
+            }
+        }
     }
 }
