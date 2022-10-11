@@ -29,10 +29,8 @@ pipeline {
         
         stage('Code Security') {
             steps {
-                sh """
-                    bandit -r ./ >> bandit_results.txt
-                    cat bandit_results.txt
-                """
+                sh "bandit -r ./ >> bandit_results.txt"
+                sh "cat bandit_results.txt"
             }
         }
 
