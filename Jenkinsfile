@@ -16,42 +16,42 @@ pipeline {
     stages {
         stage('Code Formatting') {
             steps {
-                sh '''
+                sh """
                     echo 'Running Isort formatting'
                     python3.9 -m isort .
                     echo 'Running Black formatting'
                     python3.9 -m black .
                     echo 'Finished Code formatting'
                     echo ${params.STACK_NAME}
-                '''
+                """
             }
         }
         
         stage('Code Security') {
             steps {
-                sh '''
+                sh """
                     bandit -r ./ >> bandit_results.txt
                     cat bandit_results.txt
-                '''
+                """
             }
         }
 
         stage('Unit Tests') {
             steps {
-                sh ''' 
+                sh """
                     pytest tests/ -v --tb=native >> pytest_results.txt
                     cat pytest_results.txt
-                '''
+                """
             }
         }
 
         stage('Deploy Serverless') {
             steps {
-                sh ''' 
+                sh """
                     sam validate
                     sam build
                     sam deploy --stack-name=${params.STACK_NAME} --image-repository=${params.IMAGE_REPO} --capabilities=CAPABILITY_IAM --on-failure=DELETE
-                '''
+                """
             }
         }
     }
