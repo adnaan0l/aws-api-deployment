@@ -29,14 +29,18 @@ pipeline {
         
         stage('Code Security') {
             steps {
-                sh 'bandit -r ./ > bandit_results.txt'
-                sh 'cat bandit_results.txt'
+                sh label: '', returnStatus: true, script: """
+                        bandit -r . > bandit_results.txt
+                        """
+                sh "cat bandit_results.txt"
             }
         }
 
         stage('Unit Tests') {
             steps {
-                sh 'pytest tests/ -v --tb=native > pytest_results.txt'
+                sh label: '', returnStatus: true, script: """
+                        pytest tests/ -v --tb=native > pytest_results.txt
+                        """
                 sh 'cat pytest_results.txt'
                 
             }
