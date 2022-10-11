@@ -15,36 +15,44 @@ pipeline {
     }
     stages {
         stage('Code Formatting') {
-            sh ''' 
-                echo 'Running Isort formatting'
-                python3.9 -m isort .
-                echo 'Running Black formatting'
-                python3.9 -m black .
-                echo 'Finished Code formatting'
-                echo ${params.STACK_NAME}
-            '''
+            steps {
+                sh '''
+                    echo 'Running Isort formatting'
+                    python3.9 -m isort .
+                    echo 'Running Black formatting'
+                    python3.9 -m black .
+                    echo 'Finished Code formatting'
+                    echo ${params.STACK_NAME}
+                '''
+            }
         }
         
         stage('Code Security') {
-            sh '''
-                bandit -r ./ >> bandit_results.txt
-                cat bandit_results.txt
-            '''
+            steps {
+                sh '''
+                    bandit -r ./ >> bandit_results.txt
+                    cat bandit_results.txt
+                '''
+            }
         }
 
         stage('Unit Tests') {
-            sh ''' 
-                pytest tests/ -v --tb=native >> pytest_results.txt
-                cat pytest_results.txt
-            '''
+            steps {
+                sh ''' 
+                    pytest tests/ -v --tb=native >> pytest_results.txt
+                    cat pytest_results.txt
+                '''
+            }
         }
 
         stage('Deploy Serverless') {
-            sh ''' 
-                sam validate
-                sam build
-                sam deploy --stack-name=${params.STACK_NAME} --image-repository=${params.IMAGE_REPO} --capabilities=CAPABILITY_IAM --on-failure=DELETE
-            '''
+            steps {
+                sh ''' 
+                    sam validate
+                    sam build
+                    sam deploy --stack-name=${params.STACK_NAME} --image-repository=${params.IMAGE_REPO} --capabilities=CAPABILITY_IAM --on-failure=DELETE
+                '''
+            }
         }
     }
 }
