@@ -9,6 +9,6 @@ Resources:
       ImageConfig:
         Command: ["app.lambda_handler"]
     Metadata:
-      Dockerfile: ./Dockerfile
-      DockerContext: ./source
+      Dockerfile: Dockerfile
+      DockerContext: .
       DockerTag: v1
