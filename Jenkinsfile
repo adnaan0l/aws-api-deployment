@@ -48,11 +48,13 @@ pipeline {
 
         stage('Deploy Serverless') {
             steps {
-                sh """
-                    sam validate
-                    sam build
-                    sam deploy --stack-name=${params.STACK_NAME} --image-repository=${params.IMAGE_REPO} --capabilities=CAPABILITY_IAM --on-failure=DELETE
-                """
+                withAWS(credentials: 'jenkins-user-creds', region: 'ap-south-1') {
+                    sh """
+                        sam validate
+                        sam build
+                        sam deploy --stack-name=${params.STACK_NAME} --image-repository=${params.IMAGE_REPO} --capabilities=CAPABILITY_IAM --on-failure=DELETE
+                    """
+                }
             }
         }
     }
